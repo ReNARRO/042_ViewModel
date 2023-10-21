@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.provider.SyncStateContract.Columns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,10 +35,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pertemuan4.Data.DataForm
+import com.example.pertemuan4.Data.DataSource.jenis
 import com.example.pertemuan4.ui.theme.Pertemuan4Theme
 
 class MainActivity : ComponentActivity() {
@@ -55,14 +63,17 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TampilLayar(){
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment =Alignment.CenterHorizontally
-    ) {
-        TampilText()
-
-
+    Card(
+        modifier = Modifier,
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+    ){
+        Column (
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(20.dp)
+        ){
+            TampilText()
+        }
 
     }
 }
@@ -82,27 +93,45 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
     val uiState by cobaViewModel.uiState.collectAsState()
     dataForm = uiState;
 
-    Column() {
+    Column {
         OutlinedTextField(
             value = textNama,
             onValueChange ={textNama = it},
             label = { Text(text = "Nama Lengkap")},
-            modifier = Modifier.padding(10.dp),
-            placeholder = { Text(text = "Nadiv Nugraha")}
+            singleLine = true,
+            shape = MaterialTheme.shapes.large,
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(text = "Endriarto Dewobroto")}
         )
         OutlinedTextField(
             value = texttlp,
             onValueChange ={texttlp = it},
             label = { Text(text = "Nomor Telepon")},
-            modifier = Modifier.padding(10.dp)
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            shape = MaterialTheme.shapes.large,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Jenisbox(
+            option = jenis.map { id -> context.resources.getString(id) },
+            onSelectionChanged = {cobaViewModel.setJenis(it)}
         )
 
-        Button(onClick = { /*TODO*/ }) {
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { cobaViewModel.insertData(textNama,texttlp,dataForm.sex)}) {
+            Text(
+                text = stringResource(id = R.string.submit)
+            )
 
         }
-
-        TextHasil(namanya = "Andi Harun", telponya ="084973846" , jenisnya ="Bencong" )
-
+        Spacer(modifier = Modifier.height(100.dp))
+        TextHasil(
+            namanya = cobaViewModel.namaUsr,
+            telponnya = cobaViewModel.notlp,
+            jenisnya = cobaViewModel.jeniskl,
+        )
     }
 }
 
@@ -142,7 +171,7 @@ fun Jenisbox(
 }
 
 @Composable
-fun TextHasil(namanya: String, telponya: String, jenisnya:String){
+fun TextHasil(namanya: String, telponnya: String, jenisnya:String){
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
@@ -153,7 +182,7 @@ fun TextHasil(namanya: String, telponya: String, jenisnya:String){
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 4.dp)
         )
-        Text(text = "Telepon : " + telponya,
+        Text(text = "Telepon : " + telponnya,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 4.dp)
         )
