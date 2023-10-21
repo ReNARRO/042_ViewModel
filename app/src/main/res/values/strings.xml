@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">pertemuan4</string>
+    <string name="laki">Laki-Laki</string>
+    <string name="wanita">Perempuan</string>
+    <string name="nama">Nama Lengkap</string>
+    <string name="telpon">Telpon</string>
+</resources>
