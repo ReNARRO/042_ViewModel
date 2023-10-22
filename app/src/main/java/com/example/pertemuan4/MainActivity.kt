@@ -87,6 +87,9 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
     var texttlp by remember {
         mutableStateOf("")
     }
+    var textalamat by remember {
+        mutableStateOf("")
+    }
 
     val context = LocalContext.current
     val dataForm : DataForm
@@ -112,6 +115,14 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
             shape = MaterialTheme.shapes.large,
             modifier = Modifier.fillMaxWidth(),
         )
+        OutlinedTextField(
+            value = textalamat,
+            onValueChange ={textalamat = it},
+            label = { Text(text = "Alamat")},
+            singleLine = true,
+            shape = MaterialTheme.shapes.large,
+            modifier = Modifier.fillMaxWidth(),
+        )
         Jenisbox(
             option = jenis.map { id -> context.resources.getString(id) },
             onSelectionChanged = {cobaViewModel.setJenis(it)}
@@ -120,7 +131,7 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { cobaViewModel.insertData(textNama,texttlp,dataForm.sex)}) {
+            onClick = { cobaViewModel.insertData(textNama,texttlp,textalamat,dataForm.sex)}) {
             Text(
                 text = stringResource(id = R.string.submit)
             )
@@ -131,6 +142,7 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
             namanya = cobaViewModel.namaUsr,
             telponnya = cobaViewModel.notlp,
             jenisnya = cobaViewModel.jeniskl,
+            alamatnya = cobaViewModel.alamat,
         )
     }
 }
@@ -171,18 +183,22 @@ fun Jenisbox(
 }
 
 @Composable
-fun TextHasil(namanya: String, telponnya: String, jenisnya:String){
+fun TextHasil(namanya: String, telponnya: String,alamatnya:String, jenisnya:String){
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         ),
-        modifier = Modifier.size(width = 300.dp, height = 100.dp)
+        modifier = Modifier.size(width = 300.dp, height = 130.dp)
     ) {
         Text(text = "Nama : " + namanya,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 4.dp)
         )
         Text(text = "Telepon : " + telponnya,
+            modifier = Modifier
+                .padding(horizontal = 10.dp, vertical = 4.dp)
+        )
+        Text(text = "Alamat : " + alamatnya,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 4.dp)
         )

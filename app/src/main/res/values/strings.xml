@@ -4,5 +4,6 @@
     <string name="wanita">Perempuan</string>
     <string name="nama">Nama Lengkap</string>
     <string name="telpon">Telpon</string>
+    <string name="alamat">Alamat</string>
     <string name="submit">Submit</string>
 </resources>
