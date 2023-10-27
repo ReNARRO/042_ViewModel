@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pertemuan4.Data.DataForm
 import com.example.pertemuan4.Data.DataSource.jenis
+import com.example.pertemuan4.Data.DataSource.status
 import com.example.pertemuan4.ui.theme.Pertemuan4Theme
 
 class MainActivity : ComponentActivity() {
@@ -105,18 +106,24 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
     dataForm = uiState;
 
 
-    Column () {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()) {
-            Image(painter = painterResource(R.drawable.arrow_back), contentDescription = " " )
-            Text(text = "Register")
-        }
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(120.dp),
+        modifier = Modifier
+            .fillMaxWidth()) {
+        Image(painter = painterResource(R.drawable.arrow_back), contentDescription = " " )
+
+        Text(text = "Register",
+            fontSize = 15.sp
+        )
+    }
+
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         Text(
             text = "Create Your Account",
-            modifier = Modifier
-                .fillMaxWidth(),
             fontSize = 25.sp,
             fontWeight = FontWeight.Bold
 
@@ -157,9 +164,10 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
             onSelectionChanged = {cobaViewModel.setJenis(it)}
         )
 
-//        Menikah(
-//            option = jenis.map { id -> context.resources.getString(id)},
-//            onSelectionChanged = {cobaViewModel.setStatus(it)})
+        Menikah(
+            option = status.map { id -> context.resources.getString(id)},
+            onSelectionChanged = {cobaViewModel.setStatus(it)}
+        )
 
         OutlinedTextField(
             value = textalamat,
@@ -184,7 +192,7 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
             emailnya = cobaViewModel.email,
             jenisnya = cobaViewModel.jeniskl,
             alamatnya = cobaViewModel.alamat,
-//            statusnya = cobaViewModel.status,
+            statusnya = cobaViewModel.status,
 
         )
     }
@@ -201,7 +209,7 @@ fun Jenisbox(
     }
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Jenis Kelamin:")
-        Row(modifier = Modifier.padding(16.dp)) {
+        Row() {
             option.forEach { item ->
                 Row (
                     modifier = Modifier.selectable(
@@ -234,7 +242,7 @@ fun Menikah(
     option: List<String>,
     onSelectionChanged: (String) -> Unit = {}
 ){
-    var selectedValue by rememberSaveable {
+    var selectedVal by rememberSaveable {
         mutableStateOf("")
 
     }
@@ -243,17 +251,17 @@ fun Menikah(
         option.forEach { item ->
             Row (
                 modifier = Modifier.selectable(
-                    selected = selectedValue == item,
+                    selected = selectedVal == item,
                     onClick = {
-                        selectedValue = item
+                        selectedVal = item
                         onSelectionChanged(item)
                     }
                 ),
                 verticalAlignment = Alignment.CenterVertically
             ){
                 RadioButton(
-                    selected = selectedValue == item,
-                    onClick = { selectedValue = item
+                    selected = selectedVal == item,
+                    onClick = { selectedVal = item
                         onSelectionChanged(item)
                     }
                 )
@@ -266,7 +274,7 @@ fun Menikah(
 }
 
 @Composable
-fun TextHasil(emailnya: String,alamatnya:String, jenisnya:String){
+fun TextHasil(emailnya: String,statusnya:String,alamatnya:String, jenisnya:String){
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
@@ -277,10 +285,10 @@ fun TextHasil(emailnya: String,alamatnya:String, jenisnya:String){
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 4.dp)
         )
-//        Text(text = "Status Menikah : " + statusnya,
-//            modifier = Modifier
-//                .padding(horizontal = 10.dp, vertical = 4.dp)
-//        )
+        Text(text = "Status Menikah : " + statusnya,
+            modifier = Modifier
+                .padding(horizontal = 10.dp, vertical = 4.dp)
+        )
         Text(text = "Alamat : " + alamatnya,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 4.dp)
