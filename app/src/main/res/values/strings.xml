@@ -6,4 +6,8 @@
     <string name="telpon">Telpon</string>
     <string name="alamat">Alamat</string>
     <string name="submit">Submit</string>
+    <string name="email">Email</string>
+    <string name="nikah">Menikah</string>
+    <string name="blmnikh">Belum Menikah</string>
+    <string name="regis">Register</string>
 </resources>
