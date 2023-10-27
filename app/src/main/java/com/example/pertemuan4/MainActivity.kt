@@ -164,9 +164,9 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
             onSelectionChanged = {cobaViewModel.setJenis(it)}
         )
 
-        Menikah(
+        Jenisbox(
             option = status.map { id -> context.resources.getString(id)},
-            onSelectionChanged = {cobaViewModel.setStatus(it)}
+            onSelectionChanged = {cobaViewModel.setNikah(it)}
         )
 
         OutlinedTextField(
