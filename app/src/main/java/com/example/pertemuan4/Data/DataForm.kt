@@ -1,5 +1,6 @@
 package com.example.pertemuan4.Data
 
 data class DataForm(
-    val sex: String = ""
+    val sex: String = "",
+    val stat: String = ""
 )
