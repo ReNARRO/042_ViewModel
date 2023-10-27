@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.provider.SyncStateContract.Columns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,11 +35,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pertemuan4.Data.DataForm
 import com.example.pertemuan4.Data.DataSource.jenis
@@ -87,6 +92,9 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
     var texttlp by remember {
         mutableStateOf("")
     }
+    var textEmail by remember {
+        mutableStateOf("")
+    }
     var textalamat by remember {
         mutableStateOf("")
     }
@@ -96,25 +104,63 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
     val uiState by cobaViewModel.uiState.collectAsState()
     dataForm = uiState;
 
+
+    Column () {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()) {
+            Image(painter = painterResource(R.drawable.arrow_back), contentDescription = " " )
+            Text(text = "Register")
+        }
+        Text(
+            text = "Create Your Account",
+            modifier = Modifier
+                .fillMaxWidth(),
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold
+
+        )
+    }
+
+
     Column {
         OutlinedTextField(
             value = textNama,
             onValueChange ={textNama = it},
-            label = { Text(text = "Nama Lengkap")},
+            label = { Text(text = "Username")},
             singleLine = true,
             shape = MaterialTheme.shapes.large,
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text(text = "Endriarto Dewobroto")}
+            placeholder = { Text(text = "ReNARRO")}
         )
         OutlinedTextField(
             value = texttlp,
             onValueChange ={texttlp = it},
-            label = { Text(text = "Nomor Telepon")},
+            label = { Text(text = "Telepon")},
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             shape = MaterialTheme.shapes.large,
             modifier = Modifier.fillMaxWidth(),
         )
+        OutlinedTextField(
+            value = textEmail,
+            onValueChange ={textEmail = it},
+            label = { Text(text = "Email")},
+            singleLine = true,
+            shape = MaterialTheme.shapes.large,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Jenisbox(
+            option = jenis.map { id -> context.resources.getString(id) },
+            onSelectionChanged = {cobaViewModel.setJenis(it)}
+        )
+
+//        Menikah(
+//            option = jenis.map { id -> context.resources.getString(id)},
+//            onSelectionChanged = {cobaViewModel.setStatus(it)})
+
         OutlinedTextField(
             value = textalamat,
             onValueChange ={textalamat = it},
@@ -123,26 +169,23 @@ fun TampilText(cobaViewModel: CobaViewModel = viewModel()) {
             shape = MaterialTheme.shapes.large,
             modifier = Modifier.fillMaxWidth(),
         )
-        Jenisbox(
-            option = jenis.map { id -> context.resources.getString(id) },
-            onSelectionChanged = {cobaViewModel.setJenis(it)}
-        )
 
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { cobaViewModel.insertData(textNama,texttlp,textalamat,dataForm.sex)}) {
+            onClick = { cobaViewModel.insertData(textNama,texttlp,textalamat,textEmail,dataForm.stat,dataForm.sex)}) {
             Text(
-                text = stringResource(id = R.string.submit)
+                text = stringResource(id = R.string.regis)
             )
 
         }
         Spacer(modifier = Modifier.height(100.dp))
         TextHasil(
-            namanya = cobaViewModel.namaUsr,
-            telponnya = cobaViewModel.notlp,
+            emailnya = cobaViewModel.email,
             jenisnya = cobaViewModel.jeniskl,
             alamatnya = cobaViewModel.alamat,
+//            statusnya = cobaViewModel.status,
+
         )
     }
 }
@@ -157,6 +200,46 @@ fun Jenisbox(
 
     }
     Column(modifier = Modifier.padding(16.dp)) {
+        Text(text = "Jenis Kelamin:")
+        Row(modifier = Modifier.padding(16.dp)) {
+            option.forEach { item ->
+                Row (
+                    modifier = Modifier.selectable(
+                        selected = selectedValue == item,
+                        onClick = {
+                            selectedValue = item
+                            onSelectionChanged(item)
+                        }
+                    ),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    RadioButton(
+                        selected = selectedValue == item,
+                        onClick = { selectedValue = item
+                            onSelectionChanged(item)
+                        }
+                    )
+                    Text(item)
+
+                }
+            }
+
+        }
+    }
+
+
+}
+@Composable
+fun Menikah(
+    option: List<String>,
+    onSelectionChanged: (String) -> Unit = {}
+){
+    var selectedValue by rememberSaveable {
+        mutableStateOf("")
+
+    }
+    Text(text = "Statusnya:")
+    Row(modifier = Modifier.padding(16.dp)) {
         option.forEach { item ->
             Row (
                 modifier = Modifier.selectable(
@@ -183,26 +266,26 @@ fun Jenisbox(
 }
 
 @Composable
-fun TextHasil(namanya: String, telponnya: String,alamatnya:String, jenisnya:String){
+fun TextHasil(emailnya: String,alamatnya:String, jenisnya:String){
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         ),
         modifier = Modifier.size(width = 300.dp, height = 130.dp)
     ) {
-        Text(text = "Nama : " + namanya,
+        Text(text = "Jenis Kelamin : " + jenisnya,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 4.dp)
         )
-        Text(text = "Telepon : " + telponnya,
-            modifier = Modifier
-                .padding(horizontal = 10.dp, vertical = 4.dp)
-        )
+//        Text(text = "Status Menikah : " + statusnya,
+//            modifier = Modifier
+//                .padding(horizontal = 10.dp, vertical = 4.dp)
+//        )
         Text(text = "Alamat : " + alamatnya,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 4.dp)
         )
-        Text(text = "Jenis Kelamin : " + jenisnya,
+        Text(text = "Email : " + emailnya,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 4.dp)
         )
